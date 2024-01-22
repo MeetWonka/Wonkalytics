@@ -22,7 +22,7 @@ jobs:
         python-version: ${{ matrix.python-version }}
     - name: Install ODBC Driver 18 for SQL Server
       run: |
-        wget https://packages.microsoft.com/ubuntu/20.04/prod/pool/main/m/msodbcsql18/msodbcsql18_18.3.2.1-1_arm64.deb
+        wget https://packages.microsoft.com/ubuntu/20.04/prod/pool/main/m/msodbcsql18/msodbcsql18_18.3.2.1-1_amd64.deb
         sudo dpkg -i msodbcsql18_18.3.2.1-1_arm64.deb
         sudo apt-get update
         sudo ACCEPT_EULA=Y apt-get install -y msodbcsql18

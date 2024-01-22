@@ -11,7 +11,7 @@ brew install unixodbc
 
 Afterwards simply do:
 ```bash
-pip install git@github.com:MeetWonka/Wonkalytics.git
+pip install git+https://github.com/MeetWonka/Wonkalytics.git
 ```
 
 On apple M1 pyobcd must be installed from source rather than the default pip install. So on apple silicon macs you have to do:

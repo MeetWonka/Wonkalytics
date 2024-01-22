@@ -25,3 +25,7 @@ brew install unixodbc
 ## Testing 
 
 python -m pytest
+
+## ToDo
+
+Currently the CI tests write to the ITZU SQL database, much change this later to some test SQL DB

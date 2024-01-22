@@ -3,7 +3,7 @@
 import logging
 import time
 import asyncio
-import openai_wrapper
+import wonkalytics.openai_wrapper as openai_wrapper
 import json
 import os
 from sse_starlette.sse import EventSourceResponse

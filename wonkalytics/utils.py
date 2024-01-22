@@ -3,9 +3,9 @@ import datetime
 import functools
 import requests
 import sys
-from analytics import wonkalytics_and_promptlayer_api_request
-from generator_wrapper import GeneratorWrapper
-import openai_wrapper
+from .analytics import wonkalytics_and_promptlayer_api_request
+from .generator_wrapper import GeneratorWrapper
+import wonkalytics.openai_wrapper  as openai_wrapper
 import types
 import contextvars
 

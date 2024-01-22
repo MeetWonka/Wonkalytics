@@ -1,5 +1,5 @@
 # test_analytics.py
-from analytics import _write_to_azure_sql
+from wonkalytics.analytics import _write_to_azure_sql
 from datetime import datetime
 
 def test_write_to_azure_sql():

@@ -2,7 +2,7 @@ import os
 import pyodbc
 import logging
 from datetime import datetime
-from authinfo import extract_auth_info_pl_tags
+from .authinfo import extract_auth_info_pl_tags
 from dotenv import load_dotenv
 import json
 import requests

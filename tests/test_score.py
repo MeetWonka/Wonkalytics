@@ -1,4 +1,4 @@
-from analytics import score
+from wonkalytics.analytics import score
 import pytest
 
 def test_write_to_azure_sql():

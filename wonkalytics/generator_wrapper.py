@@ -1,6 +1,6 @@
 from copy import deepcopy
-import openai_wrapper
-from analytics import wonkalytics_and_promptlayer_api_request
+import wonkalytics.openai_wrapper as openai_wrapper
+from .analytics import wonkalytics_and_promptlayer_api_request
 
 def get_api_key():
     # raise an error if the api key is not set

@@ -1,6 +1,6 @@
 import datetime
 import inspect
-from utils import async_wrapper, get_api_key, wonkalytics_api_handler
+from .utils import async_wrapper, get_api_key, wonkalytics_api_handler
 
 class OpenAIWrapper(object):
     """

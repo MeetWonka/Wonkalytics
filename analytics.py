@@ -161,6 +161,44 @@ def _write_to_azure_sql(item: dict, encrypt: str = 'yes', connection_timeout: in
     
     return True
 
+def score(response_id: str, score: int, encrypt: str = 'yes', connection_timeout: int = 30, trust_server_certificate: str = 'no'):
+    """
+    Update the 'score' column value in the SQL table for a specific row identified by 'response_id'.
+
+    Args:
+        response_id (int): The unique identifier for the row you want to update.
+        score (float): The new score value to set in the 'score' column.
+
+    Returns:
+        bool: True if the update was successful, False otherwise.
+    """
+    # Check if all environment variables are set
+    server = os.getenv('AZURE_SQL_SERVER')
+    database = os.getenv('AZURE_SQL_DB')
+    username = os.getenv('AZURE_SQL_USER')
+    password = os.getenv('AZURE_SQL_PASSWORD')
+    table_name = os.getenv('AZURE_TABLE_NAME')
+
+    _check_required_env_variables(server, database, username, password, table_name)
+
+    # Build connection string from vars
+    cnxn_str = f'DRIVER={{ODBC Driver 18 for SQL Server}};SERVER={server};DATABASE={database};Uid={username};Pwd={password};Encrypt={encrypt};TrustServerCertificate={trust_server_certificate};Connection Timeout={connection_timeout};'
+    
+    # Perform the actual log addition in the SQL table
+    with pyodbc.connect(cnxn_str) as cnxn:
+            cursor = cnxn.cursor()
+            
+            # Construct the SQL UPDATE statement with parameterized query
+            sql = f"UPDATE [{table_name}] SET score = ? WHERE response_id = ?"
+            
+            # Execute the UPDATE statement with the provided score and response_id as parameters
+            cursor.execute(sql, (score, response_id))
+            
+            # Commit the transaction
+            cnxn.commit()
+    
+    return True
+
 def _item_to_analytics_log(item, server, database, username, password, table_name, encrypt: str = 'yes', connection_timeout: int = 30, trust_server_certificate: str = 'no'):
     """
     Process an item for logging in the analytics SQL database.

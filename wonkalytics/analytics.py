@@ -132,7 +132,7 @@ def _write_to_azure_sql(item: dict, encrypt: str = 'yes', connection_timeout: in
     write_to_azure_sql(log_item)
     ```
     """
-    item.pop('api_key') # We do not want to log api keys
+    item.pop('api_key', None) # We do not want to log api keys
     logging.info('Wonkalytics received item to log:')
     logging.info(item)
 

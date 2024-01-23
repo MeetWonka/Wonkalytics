@@ -130,7 +130,8 @@ async def example_endpoint(req: ExampleRequest):
         start_time = time.time()
         completion = openai.ChatCompletion.create(
             pl_tags=["competence", "tests"],
-            request=req.model_dump(),
+            # Any key that your SQL table allows from the request variables is written to the table
+            request=req.model_dump(), 
             model="gpt-4-1106-preview",
             messages=messages,
             temperature=1,

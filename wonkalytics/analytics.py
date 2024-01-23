@@ -25,7 +25,7 @@ def _check_if_json_serializable(value):
         return False
 
 def get_uid():
-    return 'wl_' + uuid.uuid4()
+    return 'wl_' + str(uuid.uuid4())
 
 def wonkalytics_and_promptlayer_api_request(
     function_name,

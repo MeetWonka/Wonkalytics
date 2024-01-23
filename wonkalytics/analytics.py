@@ -95,7 +95,7 @@ def wonkalytics_and_promptlayer_api_request(
         # For us this is valuable but promptlayer can't handle this
         json_post_dict["request"] = request
         uid  = get_uid()
-        json_post_dict['request_id'] = uid
+        json_post_dict['id'] = uid
 
         # Wonkalytics
         _write_to_azure_sql(json_post_dict)

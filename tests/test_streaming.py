@@ -16,7 +16,7 @@ def start_uvicorn():
     # After tests are done, kill the server
     server.kill()
 
-
+# Not sure if this test appropriately catches errors
 @pytest.mark.asyncio
 async def test_stream_competence_summary():
     async with httpx.AsyncClient() as client:

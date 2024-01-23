@@ -92,6 +92,7 @@ class GeneratorWrapper:
             self.api_request_arguments["args"],
             self.api_request_arguments["kwargs"],
             self.api_request_arguments["tags"],
+            self.api_request_arguments["request"],
             cleaned_result,
             self.api_request_arguments["request_start_time"],
             self.api_request_arguments["request_end_time"],

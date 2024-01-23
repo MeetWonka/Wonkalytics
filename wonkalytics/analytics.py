@@ -226,6 +226,13 @@ def _item_to_analytics_log(item, server, database, username, password, table_nam
     Returns:
         dict: Processed dictionary item ready for SQL logging.
     """
+    # Get authinfo (may be None) must be done BEFORE flattening
+    auth_info = proc_item.get('auth_info', None)
+    tenantid, user_name, user_mail = extract_auth_info_pl_tags(auth_info)
+    proc_item['tenant_id'] = tenantid
+    proc_item['username'] = user_name
+    proc_item['email'] = user_mail
+
     flattened_item = _flatten_dict(item)
 
     # After flattening raise the chatgpt messages to the top level
@@ -237,13 +244,6 @@ def _item_to_analytics_log(item, server, database, username, password, table_nam
     # Remove prefixes
     _remove_prefix_from_keys(proc_item, 'kwargs_')
     _remove_prefix_from_keys(proc_item, 'request_')
-
-    # Get authinfo (may be None)
-    auth_info = proc_item.get('auth_info', None)
-    tenantid, user_name, user_mail = extract_auth_info_pl_tags(auth_info)
-    proc_item['tenant_id'] = tenantid
-    proc_item['username'] = user_name
-    proc_item['email'] = user_mail
 
     # Timestamp the item
     proc_item['timestamp'] = datetime.now()

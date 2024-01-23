@@ -17,9 +17,23 @@ load_dotenv()
 
 router = APIRouter()
 
+class ExampleRequest(BaseModel):
+    name: str
+    gender: str
+    competence: str
+    level: str
+    fixed_test_results: str
+    free_test_results: str
+    motivation_summary: Optional[str] = None
+    other_notes: Optional[str] = None
+    tone: str
+    response_type: str
+    language: str
+    auth_info: Optional[dict] = None
+
 
 @router.post("/test",response_class=HTMLResponse, summary="Generate a competence summary")
-async def summarize():
+async def example_endpoint(req: ExampleRequest):
     # Later move these env variables inside our analytics logic
     openai_wrapper.api_key = os.getenv('PROMPTLAYER_API_KEY')
         
@@ -44,6 +58,7 @@ async def summarize():
         start_time = time.time()
         completion = openai.ChatCompletion.create(
             pl_tags=["competence", "tests"],
+            request=req.model_dump(),
             model="gpt-4-1106-preview",
             messages=messages,
             temperature=1,

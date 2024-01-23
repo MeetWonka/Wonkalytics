@@ -15,7 +15,7 @@ def get_api_key():
         raise ValueError("PROMPTLAYER_API_KEY not set in openai_wrapper.")
     return openai_wrapper.api_key
 
-def wonkalytics_api_handler(function_name, provider_type, args, kwargs, tags, response, request_start_time, request_end_time, api_key, return_pl_id=False):
+def wonkalytics_api_handler(function_name, provider_type, args, kwargs, tags,request, response, request_start_time, request_end_time, api_key, return_pl_id=False):
     """ Handle API requests for both generators and regular responses. """
     if isinstance(response, (types.GeneratorType, types.AsyncGeneratorType)) or type(response).__name__ in ["Stream", "AsyncStream"]:
         return GeneratorWrapper(response, {
@@ -42,7 +42,7 @@ def promptlayer_track_score(request_id, score, score_name, api_key):
         print(f"WARNING: Error tracking score in PromptLayer: {e}", file=sys.stderr)
         return False
 
-async def async_wrapper(coroutine_obj, return_pl_id, request_start_time, function_name, provider_type, tags, *args, **kwargs):
+async def async_wrapper(coroutine_obj, return_pl_id, request_start_time, function_name, provider_type, tags, request, *args, **kwargs):
     """ Async wrapper for handling coroutine objects and logging. """
     response = await coroutine_obj
     request_end_time = datetime.datetime.now().timestamp()

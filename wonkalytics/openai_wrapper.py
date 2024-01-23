@@ -40,6 +40,9 @@ class OpenAIWrapper(object):
         return_pl_id = kwargs.pop("return_pl_id", kwargs.pop("return_wl_id", False))
         request_start_time = datetime.datetime.now().timestamp()
 
+        # Pop the request param, so openai does not get params is does not want
+        request = kwargs.pop('request', None)
+
         # Accessing the actual object to be called
         wrapped_obj = object.__getattribute__(self, "_obj")
         # Handling instantiation if the object is a class
@@ -57,14 +60,14 @@ class OpenAIWrapper(object):
             return async_wrapper(
                 response, return_pl_id, request_start_time,
                 object.__getattribute__(self, "_function_name"),
-                object.__getattribute__(self, "provider"), tags, *args, **kwargs
+                object.__getattribute__(self, "provider"), tags,request, *args, **kwargs
             )
 
         # Handle synchronous function call
         request_end_time = datetime.datetime.now().timestamp()
         return wonkalytics_api_handler(
             object.__getattribute__(self, "_function_name"),
-            object.__getattribute__(self, "provider"), args, kwargs, tags, response,
+            object.__getattribute__(self, "provider"), args, kwargs, tags,request, response,
             request_start_time, request_end_time, get_api_key(), return_pl_id=return_pl_id
         )
 

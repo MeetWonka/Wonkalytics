@@ -227,11 +227,11 @@ def _item_to_analytics_log(item, server, database, username, password, table_nam
         dict: Processed dictionary item ready for SQL logging.
     """
     # Get authinfo (may be None) must be done BEFORE flattening
-    auth_info = proc_item.get('auth_info', None)
+    auth_info = item.get('auth_info', None)
     tenantid, user_name, user_mail = extract_auth_info_pl_tags(auth_info)
-    proc_item['tenant_id'] = tenantid
-    proc_item['username'] = user_name
-    proc_item['email'] = user_mail
+    item['tenant_id'] = tenantid
+    item['username'] = user_name
+    item['email'] = user_mail
 
     flattened_item = _flatten_dict(item)
 

@@ -1,6 +1,10 @@
+## Intro
+
+An openai streaming wrapper that logs analytics after the streaming for the prompt, request and auth_info. Simple direct logging of analytics is also possible. Intended to be used as future analytics platform for new Wonka projects. For troubles with integration ask s.vanderbijl@meetwonka.co.
+
 ## Installation
 
-## Prerequisites & pip install
+#### Prerequisites & pip install
 
 First install OBDC server 18 for SQL: https://learn.microsoft.com/en-us/sql/connect/odbc/linux-mac/install-microsoft-odbc-driver-sql-server-macos?view=sql-server-ver15
 
@@ -19,7 +23,7 @@ On apple M1 pyobcd must be installed from source rather than the default pip ins
 pip uninstall pyodbc && pip install --no-binary :all: pyodbc
 ```
 
-### Set environment variables
+#### Set environment variables
 Don't forget to set these environment variables:
 ```bash
 AZURE_SQL_SERVER=tcp:{your_azure_sql_server},1433
@@ -36,7 +40,7 @@ You're ready to go!
 
 ## Examples
 
-### Logging a simple analytics log
+#### Logging a simple analytics log
 ```python
 from analytics import _write_to_azure_sql
 from datetime import datetime
@@ -52,7 +56,7 @@ _write_to_azure_sql(log_item)
 
 ```
 
-### Scoring a previously logged interaction/prompt
+#### Scoring a previously logged interaction/prompt
 ```python
 from analytics import score
 
@@ -60,7 +64,7 @@ response_id = "chatcmpl-8jnIJAkEKBQJn5cs7QCJ1wIcBaII2"
 assert score(response_id, 100) == True  # Returns true if no errors
 ```
 
-### Streaming an openai response and automatically log the interaction
+#### Streaming an openai response and automatically log the interaction
 NOTE: See the examples folder to see a more complete example of this.
 
 This allows you to itneract with the streaming of openai as you always do. Several properties will be logged to analytics (see the default database columns). If 'auth_info' key is present on the request then auth info will be logged to analytics with the request.

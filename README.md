@@ -166,25 +166,43 @@ async def example_endpoint(req: ExampleRequest):
 Several parameters are expected to follow a default format, when following the streaming examples above parameters should automatically be in the expected format. By default the sql table columns are expected to follow this format:
 
 ```
-[action]                      TEXT           NULL,
-[username]                    TEXT           NULL,
-[timestamp]                   DATETIME       NULL,
-[tenant_id]                   TEXT           NULL,
-[email]                       TEXT           NULL,
-[system_msg]                  TEXT           NULL,
-[messages]                    TEXT           NULL,
-[model]                       TEXT           NULL,
-[provider_type]               TEXT           NULL,
-[temperature]                 FLOAT (53)     NULL,
-[max_tokens]                  INT            NULL,
-[top_p]                       FLOAT (53)     NULL,
-[frequency_penalty]           FLOAT (53)     NULL,
-[presence_penalty]            FLOAT (53)     NULL,
-[response_id]                 NVARCHAR (MAX) NULL,
-[response_system_fingerprint] TEXT           NULL,
-[start_time]                  FLOAT (53)     NULL,
-[end_time]                    FLOAT (53)     NULL,
-[score]                       INT            NULL
+    [id]                          NVARCHAR (MAX) NULL   REQUIRED (for setting a score later)
+    [action]                      TEXT           NULL,  AUTOREAD from authinfo
+    [username]                    TEXT           NULL,  AUTOREAD from authinfo
+    [tenant_id]                   TEXT           NULL,  AUTOREAD from authinfo
+    [email]                       TEXT           NULL,  AUTOREAD from authinfo
+    [timestamp]                   DATETIME       NULL,  AUTOADDED
+    [system_msg]                  TEXT           NULL,  AUTOADDED when using streaming wrapper
+    [messages]                    TEXT           NULL,  AUTOADDED when using streaming wrapper
+    [model]                       TEXT           NULL,  AUTOADDED when using streaming wrapper
+    [provider_type]               TEXT           NULL,  AUTOADDED when using streaming wrapper
+    [temperature]                 FLOAT (53)     NULL,  AUTOADDED when using streaming wrapper
+    [max_tokens]                  INT            NULL,  AUTOADDED when using streaming wrapper
+    [top_p]                       FLOAT (53)     NULL,  AUTOADDED when using streaming wrapper
+    [frequency_penalty]           FLOAT (53)     NULL,  AUTOADDED when using streaming wrapper
+    [presence_penalty]            FLOAT (53)     NULL,  AUTOADDED when using streaming wrapper
+    [response_id]                 NVARCHAR (MAX) NULL,  AUTOADDED when using streaming wrapper
+    [response_system_fingerprint] TEXT           NULL,  AUTOADDED when using streaming wrapper
+    [start_time]                  FLOAT (53)     NULL,  AUTOADDED
+    [end_time]                    FLOAT (53)     NULL,  AUTOADDED
+    [score]                       INT            NULL,
+    [name]                        NVARCHAR (MAX) NULL,
+    [gender]                      NVARCHAR (MAX) NULL,
+    [competence]                  NVARCHAR (MAX) NULL,
+    [level]                       NVARCHAR (MAX) NULL,
+    [fixed_test_results]          NVARCHAR (MAX) NULL,
+    [free_test_results]           NVARCHAR (MAX) NULL,
+    [motivation_summary]          NVARCHAR (MAX) NULL,
+    [other_notes]                 NVARCHAR (MAX) NULL,
+    [tone]                        NVARCHAR (MAX) NULL,
+    [response_type]               NVARCHAR (MAX) NULL,
+    [language]                    NVARCHAR (MAX) NULL,
+    [position]                    NVARCHAR (MAX) NULL,
+    [carreer_notes]               NVARCHAR (MAX) NULL,
+    [test_results]                NVARCHAR (MAX) NULL,
+    [notes]                       NVARCHAR (MAX) NULL,
+    [summary]                     NVARCHAR (MAX) NULL,
+    
 ```
 
 The correct key values are automatically extracted when following the examples above to interact with the API. Specifically authinfo is expected to follow the azure /.auth/me format (logging auth_info is optional though) which is:

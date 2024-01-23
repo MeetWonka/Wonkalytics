@@ -7,6 +7,7 @@ from dotenv import load_dotenv
 import json
 import requests
 import sys
+import uuid
 
 load_dotenv()
 
@@ -23,6 +24,8 @@ def _check_if_json_serializable(value):
     except Exception:
         return False
 
+def get_uid():
+    return 'wl_' + uuid.uuid4()
 
 def wonkalytics_and_promptlayer_api_request(
     function_name,
@@ -91,6 +94,8 @@ def wonkalytics_and_promptlayer_api_request(
 
         # For us this is valuable but promptlayer can't handle this
         json_post_dict["request"] = request
+        uid  = get_uid()
+        json_post_dict['request_id'] = uid
 
         # Wonkalytics
         _write_to_azure_sql(json_post_dict)
@@ -101,8 +106,8 @@ def wonkalytics_and_promptlayer_api_request(
             f"WARNING: While logging your request Wonkalytics had the following error: {e}",
             file=sys.stderr,
         )
-    if request_response is not None and return_pl_id:
-        return request_response.json().get("request_id")
+    
+    return uid
     
 
 
@@ -193,7 +198,7 @@ def score(response_id: str, score: int, encrypt: str = 'yes', connection_timeout
             cursor = cnxn.cursor()
             
             # Construct the SQL UPDATE statement with parameterized query
-            sql = f"UPDATE [{table_name}] SET score = ? WHERE response_id = ?"
+            sql = f"UPDATE [{table_name}] SET score = ? WHERE request_id = ?"
             
             # Execute the UPDATE statement with the provided score and response_id as parameters
             cursor.execute(sql, (score, response_id))

@@ -198,7 +198,7 @@ def score(response_id: str, score: int, encrypt: str = 'yes', connection_timeout
             cursor = cnxn.cursor()
             
             # Construct the SQL UPDATE statement with parameterized query
-            sql = f"UPDATE [{table_name}] SET score = ? WHERE request_id = ?"
+            sql = f"UPDATE [{table_name}] SET score = ? WHERE id = ?"
             
             # Execute the UPDATE statement with the provided score and response_id as parameters
             cursor.execute(sql, (score, response_id))

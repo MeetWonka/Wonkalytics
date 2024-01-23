@@ -129,8 +129,8 @@ def _write_to_azure_sql(item: dict, encrypt: str = 'yes', connection_timeout: in
     write_to_azure_sql(log_item)
     ```
     """
-    logging.debug('Wonkalytics received item to log:')
-    logging.debug(item)
+    logging.info('Wonkalytics received item to log:')
+    logging.info(item)
 
     if not isinstance(item, dict):
         raise ValueError('Wonkalytics, analytics log item should be a dict.')
@@ -252,8 +252,8 @@ def _item_to_analytics_log(item, server, database, username, password, table_nam
     allowed_keys = _get_allowed_keys(table_name, server, database, username, password, encrypt, connection_timeout, trust_server_certificate)
     filtered_item = _filter_allowed_keys(proc_item, allowed_keys)
 
-    logging.debug('Wonkalytics item to log after processing and key filtering')
-    logging.debug(filtered_item)
+    logging.info('Wonkalytics item to log after processing and key filtering')
+    logging.info(filtered_item)
 
     return filtered_item
 

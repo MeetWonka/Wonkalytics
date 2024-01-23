@@ -70,10 +70,12 @@ NOTE: See the examples folder to see a more complete example of this.
 This allows you to itneract with the streaming of openai as you always do. Several properties will be logged to analytics (see the default database columns). If 'auth_info' key is present on the request then auth info will be logged to analytics with the request.
 
 ```python
+'''Example endpoint used for illustration of usage and the test.py file.'''
+
 import logging
 import time
 import asyncio
-import openai_wrapper
+import wonkalytics.openai_wrapper as openai_wrapper
 import json
 import os
 from sse_starlette.sse import EventSourceResponse
@@ -82,10 +84,33 @@ from fastapi import APIRouter
 from fastapi.responses import HTMLResponse
 from pydantic import BaseModel
 from dotenv import load_dotenv
-import openai as openai_module
+
+load_dotenv()
+
+router = APIRouter()
+
+class ExampleRequest(BaseModel):
+    name: str
+    gender: str
+    competence: str
+    level: str
+    fixed_test_results: str
+    free_test_results: str
+    motivation_summary: Optional[str] = None
+    other_notes: Optional[str] = None
+    tone: str
+    response_type: str
+    language: str
+    auth_info: Optional[dict] = None
+
 
 @router.post("/test",response_class=HTMLResponse, summary="Generate a competence summary")
-async def test():
+async def example_endpoint(req: ExampleRequest):
+    # Later move these env variables inside our analytics logic
+    openai_wrapper.api_key = os.getenv('PROMPTLAYER_API_KEY')
+        
+    import openai as openai_module
+
     openai = openai_wrapper.OpenAIWrapper(openai_module, function_name="openai")
     openai.api_key = os.getenv('OPENAI_API_KEY')
 
@@ -100,11 +125,12 @@ async def test():
             "content": "You must guess a number between 1 and 10."
         }
                 ]
-    # Interact with openai as you always do
+
     async def event_publisher():
         start_time = time.time()
         completion = openai.ChatCompletion.create(
             pl_tags=["competence", "tests"],
+            request=req.model_dump(),
             model="gpt-4-1106-preview",
             messages=messages,
             temperature=1,
@@ -118,6 +144,7 @@ async def test():
 
         for chunk in completion:
             delta = chunk[0].choices[0].delta
+            # logging.debug(chunk)
 
             try:
                 yield dict(event="data",data=delta.content.replace("\n\n", " \n\n"))

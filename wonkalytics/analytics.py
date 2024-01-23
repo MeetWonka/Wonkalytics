@@ -30,6 +30,7 @@ def wonkalytics_and_promptlayer_api_request(
     args,
     kwargs,
     tags,
+    request,
     response,
     request_start_time,
     request_end_time,
@@ -81,13 +82,15 @@ def wonkalytics_and_promptlayer_api_request(
                 "request_start_time": request_start_time,
                 "request_end_time": request_end_time,
                 "metadata": metadata,
-                
             }
         
         request_response = requests.post(
             f"{URL_API_PROMPTLAYER}/track-request",
             json=json_post_dict,
         )
+
+        # For us this is valuable but promptlayer can't handle this
+        json_post_dict["request"] = request
 
         # Wonkalytics
         _write_to_azure_sql(json_post_dict)

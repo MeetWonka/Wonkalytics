@@ -4,8 +4,8 @@ setup(
     name="Wonkalytics",
     version="0.1.0",
     description="Analytics and logging tool for streaming interactions with OpenAI's API, with support for Azure SQL database logging.",
-    author="Wonka",  # Replace with your name
-    author_email="s.vanderbijl@meetwonka.com",  # Replace with your email
+    author="Wonka",  
+    author_email="s.vanderbijl@meetwonka.com",  
     url="https://github.com/MeetWonka/Wonkalytics",
     packages=find_packages(),
     install_requires=[

@@ -48,7 +48,7 @@ You're ready to go!
 #### Logging a simple analytics log
 
 ```python
-from analytics import _write_to_azure_sql
+from wonkalytics.analytics import _write_to_azure_sql
 from datetime import datetime
 
 log_item = {

@@ -216,16 +216,18 @@ def score(
 def update_row_property(
     response_id: str,
     property_name: int,
+    property_value: object,
     encrypt: str = "yes",
     connection_timeout: int = 30,
     trust_server_certificate: str = "no",
 ):
     """
-    Update the 'any' column value in the SQL table for a specific row identified by 'response_id'.
+    Update 'any' column value in the SQL table for a specific row identified by 'response_id'.
 
     Args:
         response_id (int): The unique identifier for the row you want to update.
-        score (float): The new score value to set in the 'score' column.
+        property_name : The name of the column to update
+        property_value : The new value to set in the column
 
     Returns:
         bool: True if the update was successful, False otherwise.
@@ -250,7 +252,7 @@ def update_row_property(
         sql = f"UPDATE [{table_name}] SET {property_name} = ? WHERE id = ?"
 
         # Execute the UPDATE statement with the provided score and response_id as parameters
-        cursor.execute(sql, (score, response_id))
+        cursor.execute(sql, (property_value, response_id))
 
         # Commit the transaction
         cnxn.commit()

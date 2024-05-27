@@ -9,22 +9,27 @@ An openai streaming wrapper that logs analytics after the streaming for the prom
 First install OBDC server 18 for SQL: https://learn.microsoft.com/en-us/sql/connect/odbc/linux-mac/install-microsoft-odbc-driver-sql-server-macos?view=sql-server-ver15
 
 For mac you additionally need:
+
 ```bash
 brew install unixodbc
 ```
 
 Afterwards simply do:
+
 ```bash
 pip install git+https://github.com/MeetWonka/Wonkalytics.git
 ```
 
 On apple M1 pyobcd must be installed from source rather than the default pip install. So on apple silicon macs you have to do:
+
 ```bash
 pip uninstall pyodbc && pip install --no-binary :all: pyodbc
 ```
 
 #### Set environment variables
+
 Don't forget to set these environment variables:
+
 ```bash
 AZURE_SQL_SERVER=tcp:{your_azure_sql_server},1433
 AZURE_SQL_DB={your_azure_db_name}
@@ -41,13 +46,14 @@ You're ready to go!
 ## Examples
 
 #### Logging a simple analytics log
+
 ```python
 from analytics import _write_to_azure_sql
 from datetime import datetime
 
 log_item = {
-    'username': 'logging_test', 
-    'action': 'test_log', 
+    'username': 'logging_test',
+    'action': 'test_log',
     'timestamp': datetime.now(),
     'tenant_id': 'test_tenant_id',
     'email': 'logtestmail@wonka.com'
@@ -57,14 +63,25 @@ _write_to_azure_sql(log_item)
 ```
 
 #### Scoring a previously logged interaction/prompt
+
 ```python
-from analytics import score
+from wonkalytics.analytics import score
 
 response_id = "chatcmpl-8jnIJAkEKBQJn5cs7QCJ1wIcBaII2"
 assert score(response_id, 100) == True  # Returns true if no errors
 ```
 
+### Writing any additional value to a previously logged interaction
+
+```python
+from wonkalytics.analytics import update_row_property
+
+response_id = "chatcmpl-8jnIJAkEKBQJn5cs7QCJ1wIcBaII2"
+assert update_row_property(response_id, 'property_name', 'property_value') == True  # Returns true if no errors
+```
+
 #### Streaming an openai response and automatically log the interaction
+
 NOTE: See the examples folder to see a more complete example of this.
 
 This allows you to itneract with the streaming of openai as you always do. Several properties will be logged to analytics (see the default database columns). If 'auth_info' key is present on the request then auth info will be logged to analytics with the request.
@@ -84,6 +101,7 @@ from fastapi import APIRouter
 from fastapi.responses import HTMLResponse
 from pydantic import BaseModel
 from dotenv import load_dotenv
+from wonkalytics.analytics import update_row_property
 
 load_dotenv()
 
@@ -108,7 +126,7 @@ class ExampleRequest(BaseModel):
 async def example_endpoint(req: ExampleRequest):
     # Later move these env variables inside our analytics logic
     openai_wrapper.api_key = os.getenv('PROMPTLAYER_API_KEY')
-        
+
     import openai as openai_module
 
     openai = openai_wrapper.OpenAIWrapper(openai_module, function_name="openai")
@@ -131,7 +149,7 @@ async def example_endpoint(req: ExampleRequest):
         completion = openai.ChatCompletion.create(
             pl_tags=["competence", "tests"],
             # Any key that your SQL table allows from the request variables is written to the table
-            request=req.model_dump(), 
+            request=req.model_dump(),
             model="gpt-4-1106-preview",
             messages=messages,
             temperature=1,
@@ -155,8 +173,11 @@ async def example_endpoint(req: ExampleRequest):
 
                     yield dict(event="wl_request_id",data=chunk[1])
                     yield dict(event="elapsed_time",data=elapsed_time)
-            
+
             await asyncio.sleep(0.0001)
+
+        # Add the completed response to the SQL row
+        update_row_property(response_id, "response", complete_response)
 
     return EventSourceResponse(event_publisher())
 ```
@@ -202,12 +223,13 @@ Several parameters are expected to follow a default format, when following the s
     [test_results]                NVARCHAR (MAX) NULL,
     [notes]                       NVARCHAR (MAX) NULL,
     [summary]                     NVARCHAR (MAX) NULL,
-    
+
 ```
 
 The correct key values are automatically extracted when following the examples above to interact with the API. Specifically authinfo is expected to follow the azure /.auth/me format (logging auth_info is optional though) which is:
+
 ```js
-    // Your API request 
+    // Your API request
     {
         // Optional authinfo key
         auth_info:    {
@@ -233,8 +255,8 @@ The correct key values are automatically extracted when following the examples a
     }
 ```
 
+## Testing
 
-## Testing 
 You can run tests by running this in your activated venv:
 
 ```bash
@@ -248,7 +270,6 @@ python -m pytest
 - Give the option to map parameter values differently, to match the column names of the particular analytics SQL table for your project.
 
 ## Documentation
-
 
 All functions require environment variables to be set for the Azure SQL database connection. Make sure to set the following environment variables:
 
@@ -299,4 +320,3 @@ Update the 'score' column value in the SQL table for a specific row identified b
 - `connection_timeout` (int, optional): The timeout for the database connection in seconds (default is 30).
 
 - `trust_server_certificate` (str, optional): A string indicating whether to trust the SQL server certificate (default is 'no').
-

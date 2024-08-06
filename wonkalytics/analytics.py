@@ -369,7 +369,10 @@ def _extract_response_msg(item: dict) -> dict:
     Adds this message under the key 'response'.
     """
     if "request_response_choices" in item:
-        item["response"] = item["request_response_choices"][0]["content"]
+        if "content" in item["request_response_choices"][0].keys():
+            item["response"] = item["request_response_choices"][0]["content"]
+        if "message" in item["request_response_choices"][0].keys():
+            item["response"] = item["request_response_choices"][0]["message"]["content"]
     return item
 
 
